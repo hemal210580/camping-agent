@@ -46,7 +46,7 @@ jobs:
         run: |
           if [ -z "$NTFY_TOPIC" ]; then echo "::error::Add the NTFY_TOPIC repository secret"; exit 1; fi
           mkdir -p state
-          for cfg in yosemite_valley_2027.yaml tahoe_forest_2027.yaml tahoe_state_parks_2027.yaml; do
+          for cfg in yosemite_valley_2027.yaml tahoe_forest_2027.yaml tahoe_state_parks_2027.yaml santa_cruz_mtns_2027.yaml; do
             ci="state/ci_$cfg"
             # same search, but run once and keep results under state/
             sed -e '/^search_once:/d' -e 's#^offline_search_path: *#offline_search_path: state/#' "$cfg" > "$ci"
