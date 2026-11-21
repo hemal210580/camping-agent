@@ -1,0 +1,26 @@
+# camply search: Santa Cruz Mountains state parks (ReserveCalifornia), summer 2027
+# Portola Redwoods SP + Henry Cowell Redwoods SP (Henry Cowell is seasonal, Apr 1 - Oct 31)
+# Full lists:  py -m camply campgrounds --provider ReserveCalifornia --search "Portola"
+#              py -m camply campgrounds --provider ReserveCalifornia --search "Henry Cowell"
+
+provider: ReserveCalifornia
+
+campgrounds:
+  # IDs filled in after the ReserveCalifornia lookup (family campsites only)
+  # Portola Redwoods SP
+  # Henry Cowell Redwoods SP
+
+start_date: 2027-06-01
+end_date: 2027-09-07
+nights: 2
+weekends: false
+
+continuous: true
+polling_interval: 5
+search_forever: true
+notify_first_try: false
+notifications:
+  - ntfy
+
+offline_search: true
+offline_search_path: santa_cruz_mtns_2027_seen.json
