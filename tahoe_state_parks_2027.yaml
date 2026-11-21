@@ -1,0 +1,35 @@
+# camply search: Lake Tahoe California State Parks (ReserveCalifornia), summer 2027
+# Family campsites only (group camps, picnic area and boat-in camp left out).
+# Full lists:  py -m camply campgrounds --provider ReserveCalifornia --search "Bliss"
+
+provider: ReserveCalifornia
+
+campgrounds:
+  # D.L. Bliss SP
+  - 453    # Lower Pine (sites 1-32)
+  - 455    # Upper Pine (sites 33-88)
+  - 2154   # East Ridge (sites 91-112)
+  - 458    # West Ridge (sites 113-130)
+  - 454    # Beach Camp (sites 141-165)
+  # Emerald Bay SP
+  - 786    # Upper Eagle Point (sites 1-33)
+  - 472    # Lower Eagle Point (sites 34-100)
+  # Sugar Pine Point SP (dukMéʔem wáťa campground)
+  - 725    # Eastern Loop (sites 33-59)
+  - 726    # Middle Loop (sites 76-125)
+  - 723    # Western Loop (sites 126-175)
+
+start_date: 2027-06-01
+end_date: 2027-09-07
+nights: 2
+weekends: false
+
+continuous: true
+polling_interval: 5
+search_forever: true
+notify_first_try: false
+notifications:
+  - ntfy
+
+offline_search: true
+offline_search_path: tahoe_state_parks_2027_seen.json

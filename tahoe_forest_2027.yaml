@@ -1,0 +1,30 @@
+# camply search: Lake Tahoe Forest Service campgrounds (Recreation.gov), summer 2027
+# Camp Richardson Resort (Badgers Den, Eagles Nest, RV Village) is left out on purpose:
+# its whole 2027 season is already open, so it would flood alerts. Book it directly if you want it.
+#
+# Full list of Tahoe Basin campgrounds:  py -m camply campgrounds --rec-area 2025
+
+provider: RecreationDotGov
+
+campgrounds:
+  - 232769     # Fallen Leaf Campground
+  - 232768     # Nevada Beach Campground
+  - 232874     # William Kent Campground
+  - 232875     # Kaspian Campground
+  - 10220612   # Meeks Bay Resort
+  - 10300216   # Zephyr Cove RV & Campground (NV)
+
+start_date: 2027-06-01
+end_date: 2027-09-07
+nights: 2
+weekends: false
+
+continuous: true
+polling_interval: 5
+search_forever: true
+notify_first_try: false
+notifications:
+  - ntfy
+
+offline_search: true
+offline_search_path: tahoe_forest_2027_seen.json

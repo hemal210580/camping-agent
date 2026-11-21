@@ -1,0 +1,70 @@
+# Runs the Yosemite + Tahoe camply searches every 10 minutes, 24/7, and sends
+# ntfy alerts for newly opened sites. Sites already alerted on are remembered
+# between runs (actions cache), so you aren't alerted twice by this workflow.
+name: camply campsite watcher
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # GitHub may delay or skip runs when busy
+  workflow_dispatch: {}      # "Run workflow" button for a manual check
+
+permissions:
+  contents: read
+  actions: write             # lets the last step keep the schedule from auto-pausing
+
+concurrency:
+  group: camply
+  cancel-in-progress: false
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install camply
+        run: pip install -r requirements.txt
+
+      - name: Restore already-alerted sites
+        uses: actions/cache/restore@v4
+        with:
+          path: state
+          key: camply-state-${{ github.run_id }}
+          restore-keys: camply-state-
+
+      - name: Search once (all areas)
+        run: |
+          if [ -z "$NTFY_TOPIC" ]; then echo "::error::Add the NTFY_TOPIC repository secret"; exit 1; fi
+          mkdir -p state
+          for cfg in yosemite_valley_2027.yaml tahoe_forest_2027.yaml tahoe_state_parks_2027.yaml; do
+            ci="state/ci_$cfg"
+            # same search, but run once and keep results under state/
+            sed -e '/^search_once:/d' -e 's#^offline_search_path: *#offline_search_path: state/#' "$cfg" > "$ci"
+            echo "search_once: true" >> "$ci"
+            echo "::group::$cfg"
+            camply campsites --yaml-config "$ci" || echo "::warning::$cfg search failed this run"
+            echo "::endgroup::"
+          done
+
+      - name: Save already-alerted sites
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state
+          key: camply-state-${{ github.run_id }}
+
+      - name: Keep schedule alive (GitHub pauses schedules after 60 days without commits)
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/camply.yml/enable"

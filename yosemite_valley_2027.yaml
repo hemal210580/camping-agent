@@ -1,0 +1,38 @@
+# camply search: Yosemite Valley campgrounds, summer 2027
+# Run:  camply campsites --yaml-config yosemite_valley_2027.yaml
+#
+# Verify campground IDs once (all Yosemite campgrounds):
+#   camply campgrounds --rec-area 2991
+
+provider: RecreationDotGov
+
+campgrounds:
+  - 232447   # Upper Pines
+  - 232450   # Lower Pines
+  - 232449   # North Pines
+  # - 10004152 # Camp 4 (per-person walk-in; releases 7 days before arrival)
+  # Backups outside the Valley — uncomment if you're flexible:
+  # - 232446 # Wawona (~1 hr)
+  # - 232451 # Hodgdon Meadow (~45 min)
+  # - 232452 # Crane Flat (~30 min)
+
+# Search window: first arrival day → last checkout day
+start_date: 2027-06-01
+end_date: 2027-09-07
+
+nights: 2               # consecutive nights required
+weekends: false         # true = only Fri/Sat-night stays
+# days: [Friday, Saturday]   # alternative: limit to specific nights
+
+continuous: true
+polling_interval: 5     # minutes (camply minimum is 5)
+search_forever: true    # keep running after a hit; never re-alerts the same site/date
+notify_first_try: false
+
+notifications:
+  - ntfy                # phone push; set NTFY_TOPIC (see run_camply.sh)
+  # - email             # needs EMAIL_* vars via `camply configure`
+  # - pushover
+
+offline_search: true    # remember what it already alerted on across restarts
+offline_search_path: yosemite_2027_seen.json
